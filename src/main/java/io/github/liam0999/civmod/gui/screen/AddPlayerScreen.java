@@ -1,0 +1,90 @@
+package io.github.liam0999.civmod.gui.screen;
+
+import io.github.liam0999.civmod.player.PlayerSettings;
+
+import io.github.liam0999.civmod.player.PlayerType;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+
+import java.awt.Color;
+
+public class AddPlayerScreen extends Screen {
+    private final PlayerSettings _config;
+    private final Screen _parent;
+    private final PlayerType _playerType;
+    private EditBox _playerNameEditBox;
+
+    public AddPlayerScreen(Screen parent, PlayerSettings config, PlayerType playerType) {
+        super(Component.literal(playerType == PlayerType.Ally ? "Ally" : "Enemy"));
+        _parent = parent;
+        _config = config;
+        _playerType = playerType;
+    }
+
+    @Override
+    protected void init() {
+        int y = this.height / 3;
+        int x = this.width / 2 - 100;
+
+        _playerNameEditBox = new EditBox(this.font, x, y, 200, 20, CommonComponents.EMPTY);
+        addRenderableWidget(_playerNameEditBox);
+
+        y += 24;
+
+        addRenderableWidget(Button.builder(Component.literal("Add"), (button) -> actionAdd()).bounds(x, y, 200, 20).build());
+
+        y += 24;
+
+        addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, (button) -> actionCancel()).bounds(x, y, 200, 20).build());
+
+        setInitialFocus(_playerNameEditBox);
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent keyEvent) {
+        if (keyEvent.isConfirmation()) {
+            actionAdd();
+            return true;
+        }
+
+        if (keyEvent.isEscape()) {
+            actionCancel();
+            return true;
+        }
+
+        return super.keyPressed(keyEvent);
+    }
+
+    private void actionAdd() {
+        String playerName = _playerNameEditBox.getValue().trim();
+
+        if (playerName.isEmpty()) return;
+
+        _config.setPlayerType(playerName, _playerType);
+        _config.save();
+
+        this.minecraft.gui.setScreen(_parent);
+    }
+
+    private void actionCancel() {
+        this.minecraft.gui.setScreen(_parent);
+    }
+
+    @Override
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        guiGraphics.centeredText(this.font, this.title, this.width / 2, this.height / 4 - 40, Color.WHITE.getRGB());
+        guiGraphics.text(this.font, "Player username", (int) (this.width / 2f - 100), _playerNameEditBox.getY() - 12, Color.LIGHT_GRAY.getRGB(), true);
+
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        this.extractTransparentBackground(guiGraphics);
+    }
+}

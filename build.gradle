@@ -1,0 +1,113 @@
+// Update Gradle Wrapper using: ./gradlew wrapper --distribution-type bin --gradle-version <version>
+
+import groovy.json.JsonBuilder
+
+plugins {
+    id "dev.architectury.loom-no-remap" version "1.14-SNAPSHOT"
+    alias libs.plugins.shadow
+}
+
+loom {
+    silentMojangMappingsLicense()
+    accessWidenerPath = file("src/main/resources/civmod.accesswidener")
+}
+
+base {
+    archivesName = project.archives_base_name
+}
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    maven {
+        url "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+    maven { url "https://maven.terraformersmc.com/" }
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://jitpack.io" }
+}
+
+configurations {
+    shadowBundle
+}
+
+dependencies {
+    minecraft libs.minecraft
+
+    implementation libs.fabricLoader
+    api libs.fabricApi
+    implementation libs.modMenu
+    implementation(libs.clothConfig) {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+
+    implementation libs.sqlite
+    shadowBundle libs.sqlite
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.release = 25
+}
+
+java {
+    withSourcesJar()
+}
+
+processResources {
+    def expansions = [
+        "mod_id"               : project.mod_id,
+        "mod_name"             : project.mod_name,
+        "mod_version"          : project.mod_version,
+        "mod_description"      : project.mod_description,
+        "mod_home_url"         : project.mod_home_url,
+        "mod_source_url"       : project.mod_source_url,
+        "mod_issues_url"       : project.mod_issues_url,
+        "copyright_licence"    : project.copyright_licence,
+        "minecraft_version"    : libs.versions.minecraft.get(),
+        "fabric_loader_version": libs.versions.fabricLoader.get(),
+        "fabric_api_version"   : libs.versions.fabricApi.get(),
+        "cloth_config_version" : project.cloth_config_version,
+    ]
+    inputs.properties(expansions)
+    filesMatching("fabric.mod.json") {
+        expand(expansions)
+        filter {
+            (it as String).replace(
+                "\"%FABRIC_AUTHORS_ARRAY%\"",
+                new JsonBuilder((project.mod_authors as String).tokenize(",")).toString()
+            )
+        }
+    }
+}
+
+jar {
+    archiveClassifier = "raw"
+}
+
+shadowJar {
+    dependsOn jar
+    mainSpec.sourcePaths.clear()   // drop the default source set; take the loom-processed jar instead
+    from zipTree(jar.archiveFile)
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = ""
+    from("LICENSE")
+    from("licenses") { into "licenses" }
+}
+
+tasks.register("cleanJar", Delete) {
+    delete fileTree("dist") {
+        include "*.jar"
+    }
+}
+
+tasks.register("copyJar", Copy) {
+    dependsOn cleanJar
+    from shadowJar
+    into "dist"
+}
+
+build.dependsOn copyJar

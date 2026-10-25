@@ -1,0 +1,78 @@
+package io.github.liam0999.civmod.snitch.model;
+
+import io.github.liam0999.civmod.util.WorldPos;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static io.github.liam0999.civmod.util.Utils.nonEmptyOrDefault;
+
+public class SnitchRename {
+	public final long ts;
+	public final @NotNull WorldPos pos;
+	public final @NotNull String snitchName;
+	private final @Nullable String snitchOldName;
+	public final @Nullable String group;
+	public final @NotNull UUID clientUuid;
+
+	public SnitchRename(
+		long ts,
+		@NotNull WorldPos pos,
+		@NotNull String snitchName,
+		@Nullable String snitchOldName,
+		@Nullable String group,
+		@NotNull UUID clientUuid
+	) {
+		this.ts = ts;
+		this.pos = pos;
+		this.snitchName = snitchName;
+		this.snitchOldName = snitchOldName;
+		this.group = group;
+		this.clientUuid = clientUuid;
+	}
+
+	static Pattern renamePattern = Pattern.compile("^\\s*(?:Set|Changed) snitch name to (.+?)(?: from (.*?))?");
+	static Pattern hoverPattern = Pattern.compile("Location: (?:\\(?([^\\n)]+)\\)? )?\\[([-0-9]+),? ([-0-9]+),? ([-0-9]+)\\] *\\nName: ([^\\n]*) *\\nGroup: ([^ ]+).*", Pattern.MULTILINE);
+
+	public static @Nullable SnitchRename fromChat(
+		@NotNull Component message,
+		@NotNull String server,
+		@NotNull String world,
+		@NotNull UUID clientUuid
+	) {
+		String text = message.getString().replaceAll("§.", "");
+
+		Matcher textMatch = renamePattern.matcher(text);
+		if (!textMatch.matches()) return null;
+
+		String snitchName = textMatch.group(1);
+		String snitchOldName = textMatch.group(2);
+
+		final HoverEvent hoverEvent = message.getSiblings().get(0).getStyle().getHoverEvent();
+		if (hoverEvent == null || hoverEvent.action() != HoverEvent.Action.SHOW_TEXT) return null;
+
+		@SuppressWarnings("ConstantConditions")
+		String hoverText = ((HoverEvent.ShowText)hoverEvent).value().getString().replaceAll("§.", "");
+
+		Matcher hoverMatch = hoverPattern.matcher(hoverText);
+		if (!hoverMatch.matches()) return null;
+
+		world = nonEmptyOrDefault(hoverMatch.group(1), world);
+		int x = Integer.parseInt(hoverMatch.group(2));
+		int y = Integer.parseInt(hoverMatch.group(3));
+		int z = Integer.parseInt(hoverMatch.group(4));
+		String group = hoverMatch.group(6);
+
+		var pos = new WorldPos(server, world, x, y, z);
+
+		long now = System.currentTimeMillis();
+
+		return new SnitchRename(now, pos, snitchName, snitchOldName, group, clientUuid);
+	}
+}

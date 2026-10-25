@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.liam0999.civmod.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "ChatComponentMixin",
+    "ChatScreenMixin",
+    "ClientPacketListenerMixin",
+    "CompactedTooltipMixin",
+    "ConnectionMixin",
+    "CoordinateClickMixin",
+    "GuiGraphicsMixin",
+    "InventoryMixin",
+    "ItemRepairMixin",
+    "ItemStackMixin",
+    "KeyMappingAccessor",
+    "NameTagMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
