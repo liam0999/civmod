@@ -70,6 +70,7 @@ import net.minecraft.world.entity.monster.creaking.Creaking;
 import net.minecraft.world.entity.monster.cubemob.MagmaCube;
 import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.minecraft.world.entity.monster.cubemob.SulfurCube;
+import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.illager.Evoker;
 import net.minecraft.world.entity.monster.illager.Illusioner;
 import net.minecraft.world.entity.monster.illager.Pillager;
@@ -90,6 +91,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.monster.zombie.ZombieVillager;
 import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin;
 import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.entity.vehicle.boat.ChestBoat;
@@ -202,7 +204,7 @@ public class RadarSettings {
                         .addEntity(Illusioner.class, "icons/illager/illusioner.png")
                         .addEntity(Vex.class, "icons/illager/vex.png")
                         .addEntity(Vindicator.class, "icons/illager/vindicator.png")
-                        .addEntity(Pillager.class, "icons/illager/pillager.png")
+                        .addEntity(Pillager.class, "icons/pillager.png")
                         .addEntity(Ravager.class, "icons/illager/ravager.png")
         );
 
@@ -216,7 +218,7 @@ public class RadarSettings {
         entityList.add(new RadarEntityInfo(Fox.class, "Fox", "icons/fox.png", GroupType.NEUTRAL));
         entityList.add(new RadarEntityInfo(Strider.class, "Strider", "icons/strider.png", GroupType.NEUTRAL));
         entityList.add(new RadarEntityInfo(Turtle.class, "Turtle", "icons/turtle.png", GroupType.NEUTRAL));
-        entityList.add(new RadarEntityInfo(Turtle.class, "Trader", "icons/wandering_trader.png", GroupType.NEUTRAL));
+        entityList.add(new RadarEntityInfo(WanderingTrader.class, "Trader", "icons/wandering_trader.png", GroupType.NEUTRAL));
 
         entityList.add(new RadarEntityInfo(Bee.class, "Bee", "icons/bee.png", GroupType.NEUTRAL));
         entityList.add(new RadarEntityInfo(Dolphin.class, "Dolphin", "icons/dolphin.png", GroupType.NEUTRAL));
@@ -228,7 +230,7 @@ public class RadarSettings {
         );
 
         entityList.add(new RadarEntityInfo(Endermite.class, "Endermite", "icons/endermite.png", GroupType.AGGRESSIVE));
-        entityList.add(new RadarEntityInfo(Endermite.class, "Hoglin", "icons/hoglin.png", GroupType.AGGRESSIVE));
+        entityList.add(new RadarEntityInfo(Hoglin.class, "Hoglin", "icons/hoglin.png", GroupType.AGGRESSIVE));
         entityList.add(new RadarEntityInfo(Phantom.class, "Phantom", "icons/phantom.png", GroupType.AGGRESSIVE));
         entityList.add(new RadarEntityInfo(PiglinBrute.class, "Piglin Brute", "icons/piglin_brute.png", GroupType.AGGRESSIVE));
         entityList.add(new RadarEntityInfo(Zoglin.class, "Zoglin", "icons/zoglin.png", GroupType.AGGRESSIVE));
