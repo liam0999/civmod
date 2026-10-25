@@ -111,3 +111,11 @@ tasks.register("copyJar", Copy) {
 }
 
 build.dependsOn copyJar
+
+tasks.register("printClothJar") {
+    doLast {
+        configurations.compileClasspath.resolvedConfiguration.resolvedArtifacts
+            .findAll { it.moduleVersion.id.group == "me.shedaniel.cloth" }
+            .each { println "CLOTHJAR " + it.file }
+    }
+}

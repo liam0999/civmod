@@ -143,7 +143,7 @@ public class Radar {
         ClickEvent clickEvent = new ClickEvent.RunCommand(
                 "/xaero_waypoint_add:"
                         + playerInfo.playerName + ":"
-                        + playerInfo.playerName.substring(0, 2) + ":"
+                        + playerInfo.playerName.substring(0, Math.min(2, playerInfo.playerName.length())) + ":"
                         + (int) playerInfo.posX + ":"
                         + (_config.getShowYLevel() ? (int) playerInfo.posY : "~") + ":"
                         + (int) playerInfo.posZ + ":"

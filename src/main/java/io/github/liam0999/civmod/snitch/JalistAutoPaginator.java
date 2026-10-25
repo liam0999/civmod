@@ -27,9 +27,11 @@ public class JalistAutoPaginator {
     private int snitchesWillDormantSoon = 0;
     private Set<String> groupsFound = new HashSet<>();
     private long startTime = 0;
-    
+    private long waitingSince = 0;
+
     private static final String JALIST_TITLE = "JukeAlert snitches";
     private static final int NEXT_PAGE_SLOT = 53;
+    private static final long PAGE_TIMEOUT_MS = 5000;
     
     public static JalistAutoPaginator getInstance() {
         if (instance == null) {
@@ -63,16 +65,27 @@ public class JalistAutoPaginator {
         mc.execute(() -> clickNextPage(((AbstractContainerScreen<?>) mc.gui.screen()).getMenu().getItems()));
     }
     
+    // closing the JAList mid-scan means the next page never arrives, which would leave the scan active forever
+    public void tick() {
+        if (isActive && waitingForNextPage && System.currentTimeMillis() - waitingSince > PAGE_TIMEOUT_MS) {
+            stop("JAList scan stopped, the next page never loaded.");
+        }
+    }
+
     public void stopAutoPagination() {
+        stop("JAList scan complete!");
+    }
+
+    private void stop(String headline) {
         if (!isActive) return;
-        
+
         isActive = false;
         waitingForNextPage = false;
-        
+
         long duration = (System.currentTimeMillis() - startTime) / 1000;
         logToChat(String.format(
-            "JAList scan complete! Found %d snitches across %d groups in %d pages (%ds)",
-            totalSnitchesFound, groupsFound.size(), pagesProcessed, duration
+            "%s Found %d snitches across %d groups in %d pages (%ds)",
+            headline, totalSnitchesFound, groupsFound.size(), pagesProcessed, duration
         ));
         
         if (snitchesWillCullSoon > 0 || snitchesWillDormantSoon > 0) {
@@ -153,7 +166,8 @@ public class JalistAutoPaginator {
         }
         
         waitingForNextPage = true;
-        
+        waitingSince = System.currentTimeMillis();
+
         if (mc.gameMode != null) {
             mc.gameMode.handleContainerInput(
                 container.containerId, 

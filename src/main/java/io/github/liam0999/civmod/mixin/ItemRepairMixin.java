@@ -15,6 +15,10 @@ public abstract class ItemRepairMixin {
     @ModifyReturnValue(at = @At("RETURN"), method = "getTooltipLines")
     protected List<Component> handle(List<Component> original) {
         ItemStack itemStack = (ItemStack) (Object) this;
+        // a hidden tooltip comes back as an immutable empty list
+        if (original.isEmpty()) {
+            return original;
+        }
         if (CivMod.config().items().isShowRepairCost() && itemStack.get(DataComponents.REPAIRABLE) != null) {
             Integer repairCost = itemStack.get(DataComponents.REPAIR_COST);
             if (repairCost != null) {

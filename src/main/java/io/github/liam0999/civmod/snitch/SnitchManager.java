@@ -106,13 +106,16 @@ public final class SnitchManager {
 	}
 
 	public void handleTick() {
+		// shares L with vanilla advancements, so stay silent in singleplayer where there is no store
 		while (Keybinds.SNITCH_LIST.consumeClick()) {
-			store.close();
+			if (store != null) store.close();
 			store = null;
-			getStore();
-			logToChat(Component.literal("Reloaded the snitch database"));
+			if (getStore() != null) {
+				logToChat(Component.literal("Reloaded the snitch database"));
+			}
 		}
 
+		JalistAutoPaginator.getInstance().tick();
 		while (Keybinds.JALIST_AUTO.consumeClick()) {
 			JalistAutoPaginator.getInstance().startAutoPagination();
 		}
