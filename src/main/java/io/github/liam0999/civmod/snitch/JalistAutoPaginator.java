@@ -99,10 +99,11 @@ public class JalistAutoPaginator {
                 detail = String.format("%d snitches that will go dormant in the next 48h!", snitchesWillDormantSoon);
             }
 
-            logToChat(Component.literal("⚠ Warning: You have " + detail + " Use ")
-                .append(ChatFormat.link(MAP_URL))
-                .append(Component.literal(" to see where they are!")));
+            logToChat("⚠ Warning: You have " + detail);
         }
+
+        logToChat(Component.literal("You can visualize your snitches at ")
+            .append(ChatFormat.link(MAP_URL)));
     }
     
     public void onJalistPageLoaded(List<ItemStack> stacks, int snitchCount) {
