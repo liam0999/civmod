@@ -377,7 +377,7 @@ public class Radar {
 
         scanRadarEntities();
 
-        if (_config.getLogPlayerStatus()) {
+        if (_config.getLogJoins() || _config.getLogLeaves()) {
             scanOnlinePlayers();
         }
     }
@@ -407,8 +407,8 @@ public class Radar {
                 PlayerType playerType = _players.getPlayerType(playerInfo.playerName);
                 PlayerTypeInfo playerTypeInfo = _players.getPlayerTypeInfo(playerType);
 
-                if (playerTypeInfo.ping || _config.getLogPlayerStatus()) {
-                    _messages.put(playerKey, new MessageInfo(playerInfo, MessageReason.Disappeared, playerTypeInfo.ping));
+                if (playerTypeInfo.ping || _config.getLogLeaves()) {
+                    _messages.put(playerKey, new MessageInfo(playerInfo, MessageReason.Disappeared, playerTypeInfo.ping && _config.getLogRadarLeaves()));
                 }
             }
         }
@@ -437,8 +437,8 @@ public class Radar {
                     _sounds.add(new PlayerSoundInfo(playerTypeInfo.soundEventName, playerKey));
                 }
 
-                if (playerTypeInfo.ping || _config.getLogPlayerStatus()) {
-                    _messages.put(playerKey, new MessageInfo(playerInfo, MessageReason.Appeared, playerTypeInfo.ping));
+                if (playerTypeInfo.ping || _config.getLogJoins()) {
+                    _messages.put(playerKey, new MessageInfo(playerInfo, MessageReason.Appeared, playerTypeInfo.ping && _config.getLogRadarEnters()));
                 }
             } else {
                 oldPlayers.remove(playerKey);
@@ -497,6 +497,9 @@ public class Radar {
             _onlinePlayers.put(playerKey, playerName);
 
             if (oldOnlinePlayers == null || !oldOnlinePlayers.containsKey(playerKey)) {
+                if (!_config.getLogJoins())
+                    continue;
+
                 MessageInfo message = _messages.get(playerKey);
 
                 if (message != null) {
@@ -510,7 +513,7 @@ public class Radar {
             }
         }
 
-        if (oldOnlinePlayers != null) {
+        if (oldOnlinePlayers != null && _config.getLogLeaves()) {
             for (UUID playerKey : oldOnlinePlayers.keySet()) {
                 MessageInfo message = _messages.get(playerKey);
 

@@ -122,7 +122,7 @@ public final class RadarManager {
 
     // must stay pure: the chat mixin may evaluate this twice for the same message
     public boolean processChat(Component message) {
-        if (!config.getLogPlayerStatus() || message == null || ChatFormat.isRadarMessage(message)) {
+        if (message == null || ChatFormat.isRadarMessage(message)) {
             return false;
         }
 
@@ -135,7 +135,8 @@ public final class RadarManager {
 
         if (yellow.equals(color1) || yellow.equals(color2)) {
             String messageText = message.getString();
-            return messageText.contains(" joined the game") || messageText.contains(" left the game");
+            return (config.getLogJoins() && messageText.contains(" joined the game"))
+                || (config.getLogLeaves() && messageText.contains(" left the game"));
         }
 
         return false;

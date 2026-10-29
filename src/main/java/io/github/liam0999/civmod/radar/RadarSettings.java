@@ -123,7 +123,10 @@ public class RadarSettings {
     private boolean showPlayerNames = true;
     private boolean showPlayerAvatar = true;
     private boolean showExtraPlayerInfo = true;
-    private boolean logPlayerStatus = true;
+    private boolean logJoins = true;
+    private boolean logLeaves = true;
+    private boolean logRadarEnters = true;
+    private boolean logRadarLeaves = true;
     private boolean showYLevel = true;
     private boolean useLogScale = false;
     private boolean playerListEnabled = true;
@@ -474,12 +477,36 @@ public class RadarSettings {
         showExtraPlayerInfo = value;
     }
 
-    public boolean getLogPlayerStatus() {
-        return logPlayerStatus;
+    public boolean getLogJoins() {
+        return logJoins;
     }
 
-    public void setLogPlayerStatus(boolean value) {
-        logPlayerStatus = value;
+    public void setLogJoins(boolean value) {
+        logJoins = value;
+    }
+
+    public boolean getLogLeaves() {
+        return logLeaves;
+    }
+
+    public void setLogLeaves(boolean value) {
+        logLeaves = value;
+    }
+
+    public boolean getLogRadarEnters() {
+        return logRadarEnters;
+    }
+
+    public void setLogRadarEnters(boolean value) {
+        logRadarEnters = value;
+    }
+
+    public boolean getLogRadarLeaves() {
+        return logRadarLeaves;
+    }
+
+    public void setLogRadarLeaves(boolean value) {
+        logRadarLeaves = value;
     }
 
     public boolean getShowYLevel() {

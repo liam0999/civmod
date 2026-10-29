@@ -56,8 +56,14 @@
     "civmod.config.radar.nearby.show": "Show %s players",
 
     "civmod.config.radar.alerts": "Alerts",
-    "civmod.config.radar.alerts.chat": "Chat messages",
-    "civmod.config.radar.alerts.chat.tooltip": "Report players joining, leaving and entering radar range in chat",
+    "civmod.config.radar.alerts.joins": "Join messages",
+    "civmod.config.radar.alerts.joins.tooltip": "Report players joining the server in chat",
+    "civmod.config.radar.alerts.leaves": "Leave messages",
+    "civmod.config.radar.alerts.leaves.tooltip": "Report players leaving the server in chat",
+    "civmod.config.radar.alerts.radar_enters": "Enter radar messages",
+    "civmod.config.radar.alerts.radar_enters.tooltip": "Report players entering radar range in chat, for the player types switched on below",
+    "civmod.config.radar.alerts.radar_leaves": "Leave radar messages",
+    "civmod.config.radar.alerts.radar_leaves.tooltip": "Report players leaving radar range in chat, for the player types switched on below",
     "civmod.config.radar.alerts.player.tooltip": "Chat alert and sound played when this player type enters radar range",
 
     "civmod.config.radar.position": "HUD positions",

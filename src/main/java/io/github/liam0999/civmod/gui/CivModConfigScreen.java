@@ -36,7 +36,10 @@ public final class CivModConfigScreen {
         "radar.log_scale",
         "radar.show_extra",
         "radar.nearby.enabled",
-        "radar.alerts.chat",
+        "radar.alerts.joins",
+        "radar.alerts.leaves",
+        "radar.alerts.radar_enters",
+        "radar.alerts.radar_leaves",
         "radar.alerts.player",
         "snitches.alerts",
         "macros.snap_pitch",
@@ -230,7 +233,10 @@ public final class CivModConfigScreen {
         category.addEntry(nearby.build());
 
         SubCategoryBuilder alerts = e.startSubCategory(key("radar.alerts"));
-        alerts.add(toggle(e, "radar.alerts.chat", radar.getLogPlayerStatus(), true, radar::setLogPlayerStatus));
+        alerts.add(toggle(e, "radar.alerts.joins", radar.getLogJoins(), true, radar::setLogJoins));
+        alerts.add(toggle(e, "radar.alerts.leaves", radar.getLogLeaves(), true, radar::setLogLeaves));
+        alerts.add(toggle(e, "radar.alerts.radar_enters", radar.getLogRadarEnters(), true, radar::setLogRadarEnters));
+        alerts.add(toggle(e, "radar.alerts.radar_leaves", radar.getLogRadarLeaves(), true, radar::setLogRadarLeaves));
         for (PlayerType type : PlayerType.values()) {
             PlayerTypeInfo info = players.getPlayerTypeInfo(type);
             alerts.add(new PingSoundEntry(
