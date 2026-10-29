@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 public class PositionEditorScreen extends Screen {
-    private static final int DIM_COLOR = 0xB0101010;
+    private static final int DIM_COLOR = 0x30101010;
     private static final int OUTLINE_FOCUSED = 0xFFFFFFFF;
     private static final int OUTLINE_HOVER = 0xC0FFFFFF;
     private static final int OUTLINE_IDLE = 0x50FFFFFF;
